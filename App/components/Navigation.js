@@ -9,9 +9,9 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import LandingPageScreen from '../screens/LandingPageScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import HomeScreen from '../screens/HomeScreen';
-import LoadingScreen from '../screens/LoadingScreen'
-import MakerAccCreateScreen from '../screens/MakerAccCreateScreen'
-import BuyerAccCreateScreen from '../screens/BuyerAccCreateScreen'
+import ProjectScreen from '../screens/ProjectScreen';
+import CreateProjectScreen from '../screens/CreateProjectScreen';
+
 //#endregion
 
 /*
@@ -24,85 +24,29 @@ stack navigation
 Their respective implementation can be returned from this component
 */
 
-
 const Tab = createBottomTabNavigator();
 export default AppNavigator = () => {
-    const [loggedIn, setLoggedIn] = useState(-1)
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            setLoggedIn(1)
-            console.log('Logged in')
-        } else {
-            setLoggedIn(0)
-            console.log('Not logged in')
-        }
-    });
-    if (loggedIn == -1) { // Loading
-        return(
-            <Tab.Navigator initialRouteName="Home">
+    return (
+        <Tab.Navigator initialRouteName="Home">
             <Tab.Screen name="Home Screen"
-            component={LoadingScreen}
-            options={{
-                tabBarVisible: false,
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="home" color={color} size={size} />
-                ),
-                }}
-            />
-            </Tab.Navigator>
-        )
-    }
-    else if (loggedIn == 0) { // Not logged in
-        return (
-            <Tab.Navigator initialRouteName="Home">
-            <Tab.Screen name="Home Screen"
-            component={LoginNavigator}
-            options={{
-                tabBarVisible: false,
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="home" color={color} size={size} />
-                ),
-                }}
-            />
-        </Tab.Navigator>
-        )
-    } else { // Logged in
-        return (
-            <Tab.Navigator initialRouteName="Home">
-            <Tab.Screen name="Home Screen"
-            component={HomeNavigator}
-            options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="home" color={color} size={size} />
-                ),
+                component={HomeNavigator}
+                options={{
+                    tabBarLabel: 'Home',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={size} />
+                    ),
                 }}
             />
             <Tab.Screen name="My Profile"
-            component={ProfileNavigator}
-            options={{
-                tabBarLabel: 'My Profile',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialIcons name="contacts" color={color} size={size} />
-                ),
-            }}
+                component={ProfileNavigator}
+                options={{
+                    tabBarLabel: 'My Profile',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialIcons name="contacts" color={color} size={size} />
+                    ),
+                }}
             />
-            </Tab.Navigator>
-        )
-    }
-};
-
-
-const LoginStack = createStackNavigator();
-const LoginNavigator = () => {
-    return (
-        <LoginStack.Navigator>
-            <LoginStack.Screen name="LandingPage" options={{headerShown: false}} component={LandingPageScreen} />
-            <LoginStack.Screen name="MakerCreateScreen" options={{headerShown: false}} component={MakerAccCreateScreen} />
-            <LoginStack.Screen name="BuyerCreateScreen" options={{headerShown: false}} component={BuyerAccCreateScreen} />
-        </LoginStack.Navigator>
+        </Tab.Navigator>
     );
 };
 
@@ -112,6 +56,8 @@ const HomeNavigator = () => {
     return (
         <HomeStack.Navigator>
             <HomeStack.Screen name="Home" component={HomeScreen} />
+            <HomeStack.Screen name="ProjectScreen" component={ProjectScreen} />
+            <HomeStack.Screen name="CreateProjectScreen" component={CreateProjectScreen} />
         </HomeStack.Navigator>
     );
 };
@@ -122,6 +68,6 @@ const ProfileNavigator = () => {
     return (
         <ProfileStack.Navigator>
             <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Profile' }} />
-        </ProfileStack.Navigator>
+            </ProfileStack.Navigator>
     );
 };
