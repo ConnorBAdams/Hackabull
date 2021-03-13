@@ -9,10 +9,9 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import LandingPageScreen from '../screens/LandingPageScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import HomeScreen from '../screens/HomeScreen';
-import LoadingScreen from '../screens/LoadingScreen'
-import MakerAccCreateScreen from '../screens/MakerAccCreateScreen'
-import BuyerAccCreateScreen from '../screens/BuyerAccCreateScreen'
-import SignInScreen from '../screens/SignInScreen'
+import ProjectScreen from '../screens/ProjectScreen';
+import CreateProjectScreen from '../screens/CreateProjectScreen';
+
 //#endregion
 
 /*
@@ -95,7 +94,6 @@ export default AppNavigator = () => {
     }
 };
 
-
 const LoginStack = createStackNavigator();
 const LoginNavigator = () => {
     return (
@@ -114,6 +112,8 @@ const HomeNavigator = () => {
     return (
         <HomeStack.Navigator>
             <HomeStack.Screen name="Home" component={HomeScreen} />
+            <HomeStack.Screen name="ProjectScreen" component={ProjectScreen} />
+            <HomeStack.Screen name="CreateProjectScreen" component={CreateProjectScreen} />
         </HomeStack.Navigator>
     );
 };
@@ -124,6 +124,6 @@ const ProfileNavigator = () => {
     return (
         <ProfileStack.Navigator>
             <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Profile' }} />
-        </ProfileStack.Navigator>
+            </ProfileStack.Navigator>
     );
 };
