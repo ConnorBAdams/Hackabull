@@ -7,18 +7,27 @@ const LandingPageScreen = ({ navigation }) => {
 	<View style={styles.container}>
 		<View style={styles.header}>
 			<Text style={styles.headerFont}>Welcome!</Text>
-			<Text style={styles.subHeaderFont}>What are you looking to do?</Text>
 		</View>
 		<View style={styles.subHeader}>
-			<Text style={styles.subHeaderFont}> I'm looking to...</Text>
+			<Text style={styles.subHeaderFont}>What are you looking for?</Text>
 		</View>
 		<View style={styles.buttonList}>
-			<Button title="Find Work" buttonStyle={{width: '50%', marginBottom: '15%'}} onPress={() => navigation.navigate('MakerCreateScreen')} />
-			<Button title="Do Work" buttonStyle={{width: '50%'}} onPress={() => navigation.navigate('BuyerCreateScreen')} />
+			<Button title="Looking for a Maker" 
+			buttonStyle={{width: '75%', marginBottom: '15%', height: '15%'}} 
+			textStyle={{fontSize: 24}} 
+			onPress={() => navigation.navigate('BuyerCreateScreen')} />
+			<Button title="I am a Maker" 
+			buttonStyle={{width: '75%', height: '15%'}} 
+			textStyle={{fontSize: 24}} 
+			onPress={() => navigation.navigate('MakerCreateScreen')} />
 		</View>
 		<View style={styles.footer}>
 			<Text style={styles.footerFont}>I alrady have an account</Text>
-			<Button title="Sign in" buttonStyle={{width: '50%'}} />
+			<Button 
+			title="Sign in" 
+			buttonStyle={{width: '50%'}}
+			onPress={() => navigation.navigate('SignInScreen')}
+			/>
 		</View>
 	</View>
 	);

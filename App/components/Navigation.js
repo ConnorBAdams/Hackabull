@@ -12,6 +12,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LoadingScreen from '../screens/LoadingScreen'
 import MakerAccCreateScreen from '../screens/MakerAccCreateScreen'
 import BuyerAccCreateScreen from '../screens/BuyerAccCreateScreen'
+import SignInScreen from '../screens/SignInScreen'
 //#endregion
 
 /*
@@ -102,6 +103,7 @@ const LoginNavigator = () => {
             <LoginStack.Screen name="LandingPage" options={{headerShown: false}} component={LandingPageScreen} />
             <LoginStack.Screen name="MakerCreateScreen" options={{headerShown: false}} component={MakerAccCreateScreen} />
             <LoginStack.Screen name="BuyerCreateScreen" options={{headerShown: false}} component={BuyerAccCreateScreen} />
+            <LoginStack.Screen name="SignInScreen" options={{headerShown: false}} component={SignInScreen} />
         </LoginStack.Navigator>
     );
 };
