@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,15 +6,34 @@ import { Input } from 'react-native-elements';
 import firebase, { auth } from "firebase";
 import 'firebase/firestore';
 import { ScrollView } from "react-native-gesture-handler";
+import * as geolib from 'geolib';
 
 
 // People buying services account setup screen
 
 const BuyerAccCreateScreen = ({ navigation }) => {
-    const[emailAddress, setEmailAddress] = useState('')
-    const[password, setPassword] = useState('')
-    const[confirmPassword, setConfirmPassword] = useState('')
-    const[name, setName] = useState('')
+    const [emailAddress, setEmailAddress] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [name, setName] = useState('')
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [city, setCity] = useState(null);
+    const [state, setState] = useState(null);
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setLocation({'Longitude': position.coords.longitude, 
+                    'Latitude': position.coords.latitude})
+                console.log('Longitude', position.coords.longitude);
+                console.log('Latitude', position.coords.latitude);
+            },
+            () => {
+                alert('Position could not be determined.');
+            }
+        );
+    }, []);
 
     const CreateAccount = async () => {
         try {
@@ -32,9 +51,11 @@ const BuyerAccCreateScreen = ({ navigation }) => {
                     lastLoggedIn: Date.now(),
                     profilePic: "",
                     aboutMe: "",
-                    location: "",
+                    location: location,
                     equipment: [],
-                    myProjects: []
+                    myProjects: [],
+                    state: state,
+                    city: city
                 });
             }
             //props.onLogin();
@@ -76,7 +97,19 @@ const BuyerAccCreateScreen = ({ navigation }) => {
                 onChangeText={(text) => setName(text)}
                 leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
                 />
-                
+                <View style={{flexDirection:'row'}}>
+                <Input
+                placeholder='Los Angeles'
+                containerStyle={{width:"75%"}}
+                label={'City'}
+                onChangeText={(text) => setCity(text)}
+                />
+                <Input
+                placeholder='CA'
+                label={'State'}
+                containerStyle={{width:"25%"}}
+                onChangeText={(text) => setState(text)}
+                /></View>
             </View>
             <View style={{marginTop: '2.5%'}}>
                 <Button title="Create Account" onPress={() => CreateAccount()} />
