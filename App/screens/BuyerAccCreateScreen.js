@@ -5,6 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import firebase, { auth } from "firebase";
 import 'firebase/firestore';
+import { ScrollView } from "react-native-gesture-handler";
+
+
 // People buying services account setup screen
 
 const BuyerAccCreateScreen = ({ navigation }) => {
@@ -30,7 +33,8 @@ const BuyerAccCreateScreen = ({ navigation }) => {
                     profilePic: "",
                     aboutMe: "",
                     location: "",
-                    equipment: []
+                    equipment: [],
+                    myProjects: []
                 });
             }
             //props.onLogin();
@@ -42,39 +46,43 @@ const BuyerAccCreateScreen = ({ navigation }) => {
 
 	return (
     <View style={styles.container}>
-        <Text style={{fontSize: 24, marginVertical: 10}}>First, let's get an account set up</Text>
-        <View style={styles.inputField}>
-            <Input
-            placeholder='Bob@ILikeToMakeStuff.com'
-            label={'Email Address'}
-            onChangeText={(text) => setEmailAddress(text)}
-            leftIcon={{ type: 'font-awesome', name: 'envelope', color:'grey' }}
-            />
-            <Input
-            placeholder='Something super secure'
-            label={'Password'}
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-            leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
-            />
-            <Input
-            placeholder='Secure Confirmation'
-            label={'Confirm Password'}
-            secureTextEntry={true}
-            onChangeText={(text) => setConfirmPassword(text)}
-            leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
-            />
-            <Input
-            placeholder='Bob Clagett'
-            label={'Name'}
-            onChangeText={(text) => setName(text)}
-            leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
-            />
-            
+        <ScrollView style={{width: '100%'}}>
+        <View style={styles.innerContainer}>
+            <Text style={{fontSize: 24, marginVertical: 20}}>First, let's get an account set up</Text>
+            <View style={styles.inputField}>
+                <Input
+                placeholder='Bob@ILikeToMakeStuff.com'
+                label={'Email Address'}
+                onChangeText={(text) => setEmailAddress(text)}
+                leftIcon={{ type: 'font-awesome', name: 'envelope', color:'grey' }}
+                />
+                <Input
+                placeholder='Something super secure'
+                label={'Password'}
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+                leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
+                />
+                <Input
+                placeholder='Secure Confirmation'
+                label={'Confirm Password'}
+                secureTextEntry={true}
+                onChangeText={(text) => setConfirmPassword(text)}
+                leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
+                />
+                <Input
+                placeholder='Bob Clagett'
+                label={'Name'}
+                onChangeText={(text) => setName(text)}
+                leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
+                />
+                
+            </View>
+            <View style={{marginTop: '2.5%'}}>
+                <Button title="Create Account" onPress={() => CreateAccount()} />
+            </View>
         </View>
-        <View style={{marginTop: '25%'}}>
-            <Button title="Create Account" onPress={() => CreateAccount()} />
-        </View>
+        </ScrollView>
     </View>
     );
 };
@@ -85,6 +93,12 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "center",
+	},
+    innerContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+        marginTop: '10%',
+        width:'100%'
 	},
     equipmentList: {
         height: '20%',

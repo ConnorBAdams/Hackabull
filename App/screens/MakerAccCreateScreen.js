@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import firebase, { auth } from "firebase";
 import 'firebase/firestore';
+import { ScrollView } from "react-native-gesture-handler";
 
 // People providing services account create screen
 
@@ -41,7 +42,8 @@ const MakerAccCreateScreen = ({ navigation }) => {
                     profilePic: "",
                     aboutMe: "",
                     location: "",
-                    equipment: tags.tagsArray
+                    equipment: tags.tagsArray,
+                    myProjects: []
                 });
             }
             //props.onLogin();
@@ -53,7 +55,10 @@ const MakerAccCreateScreen = ({ navigation }) => {
 
 	return (
     <View style={styles.container}>
-        <Text style={{fontSize: 24, marginVertical: 10}}>First, let's get an account set up</Text>
+        <ScrollView style={styles.scrollStyle} >
+            <View style={styles.innerContainer}>
+
+        <Text style={{fontSize: 24, marginVertical: 20}}>First, let's get an account set up</Text>
         <View style={styles.inputField}>
             <Input
             placeholder='Bob@ILikeToMakeStuff.com'
@@ -94,7 +99,11 @@ const MakerAccCreateScreen = ({ navigation }) => {
             inputStyle={{marginLeft: 20}}
             keysForTag={', '} />
         </View>
-        <Button title="Create Account" onPress={() => CreateAccount()} />
+        <View style={{width: '60%', height: 200}}>
+            <Button title="Create Account" onPress={() => CreateAccount()} />
+        </View>
+        </View>
+        </ScrollView>
     </View>
     );
 };
@@ -106,8 +115,13 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
+    innerContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+        marginTop: '10%'
+	},
     equipmentList: {
-        height: '20%',
+        height: '15%',
         alignContent:'center',
         alignItems: 'center'
     },
@@ -137,7 +151,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderColor: 'black',
         width: '75%'
-    }
+    },
+
 });
 
 export default MakerAccCreateScreen;

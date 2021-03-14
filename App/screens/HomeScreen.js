@@ -112,16 +112,15 @@ const styles = StyleSheet.create({
 	image: {
 		height: Dimensions.get("window").width * 0.4,
 		aspectRatio: 1,
-		backgroundColor: "blue",
 		borderRadius: 15,
 		margin: 2,
 	},
 	projectCard: {
 		margin: 5,
 		padding: 10,
-		//borderWidth: 2,
+		borderWidth: 1,
 		borderRadius: 20,
-		backgroundColor: "silver",
+		//backgroundColor: "silver",
 	},
 });
 
