@@ -92,6 +92,15 @@ const CreateProjectScreen = ({ navigation, route }) => {
 			return
 		} else {
 			var userId = firebase.auth().currentUser.uid;
+            var indexbug = 0;
+
+			let tempUserInfo = userInfo
+			tempUserInfo.myProjects = [...tempUserInfo.myProjects, project]
+            if (tempUserInfo.length != 0){
+                indexbug = -1;
+            }
+
+            
 			const project = {
 				title: title,
 				description: description, 
@@ -103,11 +112,9 @@ const CreateProjectScreen = ({ navigation, route }) => {
 				equipmentTags : tags.tagsArray,
 				status: 0,
 				imageb64: image,
-				index: tempUserInfo.length -1,
+				index: tempUserInfo.length - indexbug,
 				bids: []
 			}
-			let tempUserInfo = userInfo
-			tempUserInfo.myProjects = [...tempUserInfo.myProjects, project]
 
 			let publicProject = {
 				title: title,
