@@ -16,6 +16,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 
 const ProjectScreen = ({ navigation, route }) => {
+	const [project, setProject] = useState(item)
 	const [bids, setBids] = useState([])
 	const { id, item, gigInquiry } = route.params;
 
@@ -30,6 +31,7 @@ const ProjectScreen = ({ navigation, route }) => {
     );
 
 	const getBidInfo = () => {
+		setProject(item)
 		setBids([])
 		for (var i = 0; i < item.bids.length; i++) {
 			firebase
@@ -111,30 +113,73 @@ const ProjectScreen = ({ navigation, route }) => {
 		const deny = () => {
 
 		}
-		const accept = () => {
 
+		const accept = () => {
+			// firebase.firestore()
+			// .collection("projects")
+			// .doc(item.id)
+			// .delete().then(() => {
+			// 	console.log("Document successfully deleted!");
+			// }).catch((error) => {
+			// 	console.error("Error removing document: ", error);
+			// });
+
+
+			// I hate how I did this
+			var userId = firebase.auth().currentUser.uid;
+			var makerId = project.bids[index]
+			console.log('Accepting this maker for the project, maker: ', makerId, ' for user', userId)
+			let tempProject = project
+			tempProject.bids = []
+			tempProject.status = 1
+			console.log("Updating the maker's profile")
+			firebase
+            .firestore()
+            .collection("users")
+            .doc(makerId)
+            .get()
+            .then(function (snapshot) {
+				console.log('Setting, ', tempProject)
+                let makerProfile = snapshot.data()
+				makerProfile.myGigs = [...makerProfile.myGigs, tempProject]
+				firebase.firestore()
+				.collection("users")
+				.doc(makerId)
+				.set(makerProfile)
+            })
+
+			console.log("Updating the poster's profile")
+
+			firebase
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .get()
+            .then(function (snapshot) {
+				let localProfile = snapshot.data()
+				localProfile.myProjects[project.id] = tempProject
+				firebase.firestore()
+				.collection("users")
+				.doc(userId)
+				.set(localProfile)
+            })
+			navigation.pop()
 		}
 		console.log(item);
 
 		return (
 			<View style={styles.projectCard}>
-				<TouchableOpacity
-					onPress={
-						() => tapEvent(index)
-					}
-				>
-					<Text style={styles.userText}>Maker: {item.name}</Text>
-					<Text style={styles.userText}>Rating: Stars </Text>
-					<Text style={styles.userText}>Location: {item.city}, {item.state} </Text>
-					<Text style={styles.userText}>Contact: </Text>
-					<Text style={styles.userText}>Email: {item.email}</Text>
-					{ item.phone && <Text style={styles.userText}>Phone: {item.phone}</Text>}
-					
-					<View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
-						<Button title={'Deny'} onPress={() => deny()} />
-						<Button title={'Accept'} buttonStyle={{backgroundColor:'darkgreen'}} onPress={() => accept()} />
-					</View>
-				</TouchableOpacity>
+				<Text style={styles.userText}>Maker: {item.name}</Text>
+				<Text style={styles.userText}>Rating: {item.ratings.length > 0 ? "5 Stars" : "No ratings yet"} </Text>
+				<Text style={styles.userText}>Location: {item.city}, {item.state} </Text>
+				<Text style={styles.userText}>Contact: </Text>
+				<Text style={styles.userText}>Email: {item.email}</Text>
+				{ item.phone && <Text style={styles.userText}>Phone: {item.phone}</Text>}
+				
+				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 15}}>
+					<Button title={'Deny'} onPress={() => deny()} />
+					<Button title={'Accept'} buttonStyle={{backgroundColor:'darkgreen'}} onPress={() => accept()} />
+				</View>
 			</View>
 		);
 	};

@@ -103,6 +103,7 @@ const CreateProjectScreen = ({ navigation, route }) => {
 				equipmentTags : tags.tagsArray,
 				status: 0,
 				imageb64: image,
+				index: tempUserInfo.length -1,
 				bids: []
 			}
 			let tempUserInfo = userInfo

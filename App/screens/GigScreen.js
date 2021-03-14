@@ -6,6 +6,7 @@ import {
 	View,
 	FlatList,
 	Dimensions,
+    ScrollView
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "../components/Button";
