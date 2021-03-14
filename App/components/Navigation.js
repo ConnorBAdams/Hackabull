@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 //#region Screen Imports
 import LandingPageScreen from '../screens/LandingPageScreen';
@@ -15,6 +16,8 @@ import LoadingScreen from '../screens/LoadingScreen'
 import MakerAccCreateScreen from '../screens/MakerAccCreateScreen'
 import BuyerAccCreateScreen from '../screens/BuyerAccCreateScreen'
 import SignInScreen from '../screens/SignInScreen'
+import GigScreen from "../screens/GigScreen";
+import FindGigScreen from "../screens/FindGigScreen";
 //#endregion
 
 /*
@@ -77,9 +80,18 @@ export default AppNavigator = () => {
             <Tab.Screen name="Home Screen"
             component={HomeNavigator}
             options={{
-                tabBarLabel: 'Home',
+                tabBarLabel: 'Projects',
                 tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="home" color={color} size={size} />
+                    <FontAwesome5 name="clipboard-list" color={color} size={size} />
+                ),
+                }}
+            />
+            <Tab.Screen name="My Gigs"
+            component={GigNavigator}
+            options={{
+                tabBarLabel: 'Gigs',
+                tabBarIcon: ({ color, size }) => (
+                    <FontAwesome5 name="hammer" color={color} size={size} />
                 ),
                 }}
             />
@@ -114,10 +126,21 @@ const HomeStack = createStackNavigator();
 const HomeNavigator = () => {
     return (
         <HomeStack.Navigator>
-            <HomeStack.Screen name="Home" component={HomeScreen} />
+            <HomeStack.Screen name="Home" options={{headerShown: false}} component={HomeScreen} />
             <HomeStack.Screen name="ProjectScreen" component={ProjectScreen} />
             <HomeStack.Screen name="CreateProjectScreen" component={CreateProjectScreen} />
         </HomeStack.Navigator>
+    );
+};
+
+const GigStack = createStackNavigator();
+const GigNavigator = () => {
+    return (
+        <GigStack.Navigator>
+            <GigStack.Screen name="Home" options={{headerShown: false}} component={GigScreen} />
+            <GigStack.Screen name="ProjectScreen" component={ProjectScreen} />
+            <GigStack.Screen name="FindGigScreen" component={FindGigScreen} />
+        </GigStack.Navigator>
     );
 };
 
@@ -126,7 +149,9 @@ const ProfileStack = createStackNavigator();
 const ProfileNavigator = () => {
     return (
         <ProfileStack.Navigator>
-            <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Profile' }} />
+            <ProfileStack.Screen name="ProfileScreen"
+             component={ProfileScreen} 
+             options={{ headerShown: false }} />
             </ProfileStack.Navigator>
     );
 };

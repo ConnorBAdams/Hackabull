@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Image,
     StyleSheet,
@@ -6,6 +6,7 @@ import {
     View,
     FlatList,
     Dimensions,
+	Platform 
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Button from "../components/Button";
@@ -14,6 +15,8 @@ import { Input, CheckBox } from "react-native-elements";
 import firebase, { auth } from "firebase";
 import "firebase/firestore";
 import TagInput from "react-native-tags-input";
+import { useFocusEffect } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 
 const CreateProjectScreen = ({ navigation, route }) => {
     const [title, setTitle] = useState("");
@@ -24,6 +27,58 @@ const CreateProjectScreen = ({ navigation, route }) => {
     const [iNeedHelp, setINeedHelp] = useState(false);
     const [iHaveMaterials, setIHaveMaterials] = useState(false);
     const [tags, setTags] = useState({ tag: "", tagsArray: [] });
+    const [userInfo, setUserInfo] = useState(null)
+	const [image, setImage] = useState(null);
+
+	useEffect(() => {
+	  (async () => {
+		if (Platform.OS !== 'web') {
+		  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+		  if (status !== 'granted') {
+			alert('Sorry, we need camera roll permissions to make this work!');
+		  }
+		}
+	  })();
+	}, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            GetUserData();
+    
+          return () => {
+              console.log("Create Project Screen")
+          };
+        }, [])
+    );
+
+	const pickImage = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+		  mediaTypes: ImagePicker.MediaTypeOptions.All,
+		  allowsEditing: true,
+		  aspect: [1, 1],
+		  quality: 1,
+		  base64: true
+		});
+	
+		console.log(result);
+	
+		if (!result.cancelled) {
+		  setImage(result.uri);
+		}
+	  };
+
+    const GetUserData = () => {
+        var userId = firebase.auth().currentUser.uid;
+        firebase
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .get()
+            .then(function (snapshot) {
+                setUserInfo(snapshot.data())
+                console.log(snapshot.data())
+            })
+    }
 
     const onChange = (event, selectedDate) => {
         const date = selectedDate || date;
@@ -31,12 +86,59 @@ const CreateProjectScreen = ({ navigation, route }) => {
     };
 
 	const submitPost = () => {
-		if (title != '') {
+		if (title == '') {
 			return
-		} else if (description != '') {
+		} else if (description == '') {
 			return
 		} else {
+			var userId = firebase.auth().currentUser.uid;
+			const project = {
+				title: title,
+				description: description, 
+				budget: budget, 
+				requiredDeadline: requiredDeadline,
+				targetDeadline: (requiredDeadline)? targetDeadline : null,
+				iNeedHelp : iNeedHelp,
+				iHaveMaterials : iHaveMaterials,
+				equipmentTags : tags.tagsArray,
+				status: 0,
+				imageb64: image,
+				index: tempUserInfo.length -1,
+				bids: []
+			}
+			let tempUserInfo = userInfo
+			tempUserInfo.myProjects = [...tempUserInfo.myProjects, project]
 
+			let publicProject = {
+				title: title,
+				description: description, 
+				budget: budget, 
+				requiredDeadline: requiredDeadline,
+				targetDeadline: (requiredDeadline)? targetDeadline : null,
+				iNeedHelp : iNeedHelp,
+				iHaveMaterials : iHaveMaterials,
+				equipmentTags : tags.tagsArray,
+				ownerLocation: userInfo.location,
+				ownerName: userInfo.name,
+				status: 0,
+				index: tempUserInfo.length -1,
+				imageb64: image,
+				bids: [],
+				owner: userId
+			}
+
+			// Add to this user
+			firebase.firestore()
+			.collection("users")
+			.doc(userId)
+			.set(tempUserInfo);
+
+			// Add to the public projects
+			firebase.firestore()
+			.collection("projects")
+			.add(publicProject);
+
+			navigation.pop()
 		}
 	}
 
@@ -137,6 +239,10 @@ const CreateProjectScreen = ({ navigation, route }) => {
                             style={{ backgroundColor: "red" }}
                         />
                     </View>
+					<View style={{ flex: 1, alignItems: 'center', marginVertical: 30, justifyContent: 'center' }}>
+					<Button title="Set a Project Picture" onPress={pickImage} />
+					{image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+					</View>
                     <Button
                         title="Submit"
                         onPress={() => submitPost()}
