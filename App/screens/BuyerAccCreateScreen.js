@@ -20,12 +20,13 @@ const BuyerAccCreateScreen = ({ navigation }) => {
     const [errorMsg, setErrorMsg] = useState(null);
     const [city, setCity] = useState(null);
     const [state, setState] = useState(null);
+    const [phone, setPhone] = useState('')
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                setLocation({'Longitude': position.coords.longitude, 
-                    'Latitude': position.coords.latitude})
+                setLocation({'longitude': position.coords.longitude, 
+                    'latitude': position.coords.latitude})
                 console.log('Longitude', position.coords.longitude);
                 console.log('Latitude', position.coords.latitude);
             },
@@ -54,8 +55,11 @@ const BuyerAccCreateScreen = ({ navigation }) => {
                     location: location,
                     equipment: [],
                     myProjects: [],
+                    myGigs: [],
                     state: state,
-                    city: city
+                    city: city,
+                    ratings: [],
+                    phone: phone
                 });
             }
             //props.onLogin();
@@ -73,13 +77,13 @@ const BuyerAccCreateScreen = ({ navigation }) => {
             <View style={styles.inputField}>
                 <Input
                 placeholder='Bob@ILikeToMakeStuff.com'
-                label={'Email Address'}
+                label={'Email Address  (required)'}
                 onChangeText={(text) => setEmailAddress(text)}
                 leftIcon={{ type: 'font-awesome', name: 'envelope', color:'grey' }}
                 />
                 <Input
                 placeholder='Something super secure'
-                label={'Password'}
+                label={'Password  (required)'}
                 secureTextEntry={true}
                 onChangeText={(text) => setPassword(text)}
                 leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
@@ -93,9 +97,15 @@ const BuyerAccCreateScreen = ({ navigation }) => {
                 />
                 <Input
                 placeholder='Bob Clagett'
-                label={'Name'}
+                label={'Name  (required)'}
                 onChangeText={(text) => setName(text)}
                 leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
+                />
+                <Input
+                placeholder='###-###-####'
+                label={'Phone Number'}
+                onChangeText={(text) => setPhone(text)}
+                leftIcon={{ type: 'font-awesome', name: 'phone', color:'grey' }}
                 />
                 <View style={{flexDirection:'row'}}>
                 <Input

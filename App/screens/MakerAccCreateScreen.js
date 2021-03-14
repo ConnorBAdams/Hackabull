@@ -22,6 +22,7 @@ const MakerAccCreateScreen = ({ navigation }) => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [name, setName] = useState('')
+    const [phone, setPhone] = useState('')
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [city, setCity] = useState(null);
@@ -34,8 +35,8 @@ const MakerAccCreateScreen = ({ navigation }) => {
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                setLocation({'Longitude': position.coords.longitude, 
-                    'Latitude': position.coords.latitude})
+                setLocation({'longitude': position.coords.longitude, 
+                    'latitude': position.coords.latitude})
                 console.log('Longitude', position.coords.longitude);
                 console.log('Latitude', position.coords.latitude);
             },
@@ -64,8 +65,11 @@ const MakerAccCreateScreen = ({ navigation }) => {
                     location: location,
                     equipment: tags.tagsArray,
                     myProjects: [],
+                    myGigs: [],
                     state: state,
-                    city: city
+                    city: city,
+                    ratings: [],
+                    phone: phone
                 });
             }
             //props.onLogin();
@@ -84,13 +88,13 @@ const MakerAccCreateScreen = ({ navigation }) => {
         <View style={styles.inputField}>
             <Input
             placeholder='Bob@ILikeToMakeStuff.com'
-            label={'Email Address'}
+            label={'Email Address  (required)'}
             onChangeText={(text) => setEmailAddress(text)}
             leftIcon={{ type: 'font-awesome', name: 'envelope', color:'grey' }}
             />
             <Input
             placeholder='Something super secure'
-            label={'Password'}
+            label={'Password  (required)'}
             secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
             leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
@@ -104,9 +108,15 @@ const MakerAccCreateScreen = ({ navigation }) => {
             />
             <Input
             placeholder='Bob Clagett'
-            label={'Name'}
+            label={'Name  (required)'}
             onChangeText={(text) => setName(text)}
             leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
+            />
+            <Input
+            placeholder='###-###-####'
+            label={'Phone Number'}
+            onChangeText={(text) => setPhone(text)}
+            leftIcon={{ type: 'font-awesome', name: 'phone', color:'grey' }}
             />
             <View style={{flexDirection:'row'}}>
             <Input
