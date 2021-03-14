@@ -1,17 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import firebase, { auth } from "firebase";
 import 'firebase/firestore';
+import { ScrollView } from "react-native-gesture-handler";
+import * as geolib from 'geolib';
+
+
 // People buying services account setup screen
 
 const BuyerAccCreateScreen = ({ navigation }) => {
-    const[emailAddress, setEmailAddress] = useState('')
-    const[password, setPassword] = useState('')
-    const[confirmPassword, setConfirmPassword] = useState('')
-    const[name, setName] = useState('')
+    const [emailAddress, setEmailAddress] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [name, setName] = useState('')
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [city, setCity] = useState(null);
+    const [state, setState] = useState(null);
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setLocation({'Longitude': position.coords.longitude, 
+                    'Latitude': position.coords.latitude})
+                console.log('Longitude', position.coords.longitude);
+                console.log('Latitude', position.coords.latitude);
+            },
+            () => {
+                alert('Position could not be determined.');
+            }
+        );
+    }, []);
 
     const CreateAccount = async () => {
         try {
@@ -29,8 +51,11 @@ const BuyerAccCreateScreen = ({ navigation }) => {
                     lastLoggedIn: Date.now(),
                     profilePic: "",
                     aboutMe: "",
-                    location: "",
-                    equipment: []
+                    location: location,
+                    equipment: [],
+                    myProjects: [],
+                    state: state,
+                    city: city
                 });
             }
             //props.onLogin();
@@ -42,39 +67,55 @@ const BuyerAccCreateScreen = ({ navigation }) => {
 
 	return (
     <View style={styles.container}>
-        <Text style={{fontSize: 24, marginVertical: 10}}>First, let's get an account set up</Text>
-        <View style={styles.inputField}>
-            <Input
-            placeholder='Bob@ILikeToMakeStuff.com'
-            label={'Email Address'}
-            onChangeText={(text) => setEmailAddress(text)}
-            leftIcon={{ type: 'font-awesome', name: 'envelope', color:'grey' }}
-            />
-            <Input
-            placeholder='Something super secure'
-            label={'Password'}
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-            leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
-            />
-            <Input
-            placeholder='Secure Confirmation'
-            label={'Confirm Password'}
-            secureTextEntry={true}
-            onChangeText={(text) => setConfirmPassword(text)}
-            leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
-            />
-            <Input
-            placeholder='Bob Clagett'
-            label={'Name'}
-            onChangeText={(text) => setName(text)}
-            leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
-            />
-            
+        <ScrollView style={{width: '100%'}}>
+        <View style={styles.innerContainer}>
+            <Text style={{fontSize: 24, marginVertical: 20}}>First, let's get an account set up</Text>
+            <View style={styles.inputField}>
+                <Input
+                placeholder='Bob@ILikeToMakeStuff.com'
+                label={'Email Address'}
+                onChangeText={(text) => setEmailAddress(text)}
+                leftIcon={{ type: 'font-awesome', name: 'envelope', color:'grey' }}
+                />
+                <Input
+                placeholder='Something super secure'
+                label={'Password'}
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+                leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
+                />
+                <Input
+                placeholder='Secure Confirmation'
+                label={'Confirm Password'}
+                secureTextEntry={true}
+                onChangeText={(text) => setConfirmPassword(text)}
+                leftIcon={{ type: 'font-awesome', name: 'lock', color:'grey' }}
+                />
+                <Input
+                placeholder='Bob Clagett'
+                label={'Name'}
+                onChangeText={(text) => setName(text)}
+                leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
+                />
+                <View style={{flexDirection:'row'}}>
+                <Input
+                placeholder='Los Angeles'
+                containerStyle={{width:"75%"}}
+                label={'City'}
+                onChangeText={(text) => setCity(text)}
+                />
+                <Input
+                placeholder='CA'
+                label={'State'}
+                containerStyle={{width:"25%"}}
+                onChangeText={(text) => setState(text)}
+                /></View>
+            </View>
+            <View style={{marginTop: '2.5%'}}>
+                <Button title="Create Account" onPress={() => CreateAccount()} />
+            </View>
         </View>
-        <View style={{marginTop: '25%'}}>
-            <Button title="Create Account" onPress={() => CreateAccount()} />
-        </View>
+        </ScrollView>
     </View>
     );
 };
@@ -85,6 +126,12 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "center",
+	},
+    innerContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+        marginTop: '10%',
+        width:'100%'
 	},
     equipmentList: {
         height: '20%',

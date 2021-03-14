@@ -1,0 +1,22 @@
+{
+  "name": "Bob Builder",
+  "username": "BobTheBuilder",
+  "address": {
+    "city": "Tuscaloosa",
+    "state": "AL"
+  },
+  "projects": "project",
+  "tools": "tool",
+  "skills": "skill",
+  "ratings": {
+    "stars": 5,
+    "amount": 9999
+  },
+  "bio": "I make stuff.",
+  "avatar": "https://m.media-amazon.com/images/M/MV5BNjRlYjgwMWMtNDFmMy00OWQ0LWFhMTMtNWE3MTU4ZjQ3MjgyXkEyXkFqcGdeQXVyNzU1NzE3NTg@._V1_CR0,45,480,270_AL_UX477_CR0,0,477,268_AL_.jpg",
+  "avatarBackground": "https://i.pinimg.com/originals/ee/f3/a2/eef3a23e5f848a4cae901c151d23693f.jpg",
+  "tools_test": [
+    { "id": 1, "name": "Car", "model": "Roadster" },
+    { "id": 2, "name": "Truck", "model": "CyberTruck" }
+  ]
+}

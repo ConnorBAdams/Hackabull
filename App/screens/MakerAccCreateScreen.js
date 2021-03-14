@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
 import TagInput from 'react-native-tags-input'
 import Button from "../components/Button";
@@ -6,23 +6,44 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import firebase, { auth } from "firebase";
 import 'firebase/firestore';
+import { ScrollView } from "react-native-gesture-handler";
+import * as geolib from 'geolib';
+
 
 // People providing services account create screen
 
 
 const MakerAccCreateScreen = ({ navigation }) => {
-    const[tags, setTags] = useState({
+    const [tags, setTags] = useState({
           tag: '',
           tagsArray: []
         })
-    const[emailAddress, setEmailAddress] = useState('')
-    const[password, setPassword] = useState('')
-    const[confirmPassword, setConfirmPassword] = useState('')
-    const[name, setName] = useState('')
+    const [emailAddress, setEmailAddress] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [name, setName] = useState('')
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [city, setCity] = useState(null);
+    const [state, setState] = useState(null);
 
     const updateTagState = (state) => {
         setTags(state)
     };
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setLocation({'Longitude': position.coords.longitude, 
+                    'Latitude': position.coords.latitude})
+                console.log('Longitude', position.coords.longitude);
+                console.log('Latitude', position.coords.latitude);
+            },
+            () => {
+                alert('Position could not be determined.');
+            }
+        );
+    }, []);
 
     const CreateAccount = async () => {
         try {
@@ -40,8 +61,11 @@ const MakerAccCreateScreen = ({ navigation }) => {
                     lastLoggedIn: Date.now(),
                     profilePic: "",
                     aboutMe: "",
-                    location: "",
-                    equipment: tags.tagsArray
+                    location: location,
+                    equipment: tags.tagsArray,
+                    myProjects: [],
+                    state: state,
+                    city: city
                 });
             }
             //props.onLogin();
@@ -53,7 +77,10 @@ const MakerAccCreateScreen = ({ navigation }) => {
 
 	return (
     <View style={styles.container}>
-        <Text style={{fontSize: 24, marginVertical: 10}}>First, let's get an account set up</Text>
+        <ScrollView style={styles.scrollStyle} >
+            <View style={styles.innerContainer}>
+
+        <Text style={{fontSize: 24, marginVertical: 20}}>First, let's get an account set up</Text>
         <View style={styles.inputField}>
             <Input
             placeholder='Bob@ILikeToMakeStuff.com'
@@ -81,7 +108,19 @@ const MakerAccCreateScreen = ({ navigation }) => {
             onChangeText={(text) => setName(text)}
             leftIcon={{ type: 'font-awesome', name: 'user', color:'grey' }}
             />
-            
+            <View style={{flexDirection:'row'}}>
+            <Input
+            placeholder='Los Angeles'
+            containerStyle={{width:"75%"}}
+            label={'City'}
+            onChangeText={(text) => setCity(text)}
+            />
+            <Input
+            placeholder='CA'
+            label={'State'}
+            containerStyle={{width:"25%"}}
+            onChangeText={(text) => setState(text)}
+            /></View>
         </View>
         <Text style={styles.sectionHeader}>Equipment I have: </Text>
         <View style={styles.equipmentList}>
@@ -94,7 +133,11 @@ const MakerAccCreateScreen = ({ navigation }) => {
             inputStyle={{marginLeft: 20}}
             keysForTag={', '} />
         </View>
-        <Button title="Create Account" onPress={() => CreateAccount()} />
+        <View style={{width: '60%', height: 200}}>
+            <Button title="Create Account" onPress={() => CreateAccount()} />
+        </View>
+        </View>
+        </ScrollView>
     </View>
     );
 };
@@ -106,8 +149,13 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
+    innerContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+        marginTop: '10%'
+	},
     equipmentList: {
-        height: '20%',
+        height: '15%',
         alignContent:'center',
         alignItems: 'center'
     },
@@ -137,7 +185,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderColor: 'black',
         width: '75%'
-    }
+    },
+
 });
 
 export default MakerAccCreateScreen;
