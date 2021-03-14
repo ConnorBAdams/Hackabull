@@ -1,18 +1,18 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from 'react'
+import PropTypes from 'prop-types'
 
+import contactData from '../assets/user_data.json'
 
-const ProfileScreen = ({ navigation }) => {
-	return <View style={styles.container}></View>;
-};
+import Profile from './Profile'
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-});
+const ProfileScreen = () => <Profile {...contactData} />
 
-export default ProfileScreen;
+ProfileScreen.navigationOptions = () => ({
+  header: null,
+})
+
+ProfileScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+}
+
+export default ProfileScreen
